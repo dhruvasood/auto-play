@@ -336,19 +336,12 @@ int main(int argc, char **argv) {
 		if(!(tmp = strstr(next_file->d_name,".bmp")))
 			continue;
 		pid_t cjpeg;
-		int fd;
 		string outfilename = next_file->d_name;
 		outfilename = outfilename.substr(0,outfilename.find_last_of('.')) + ".jpg";
 		if((cjpeg = fork())<0){
 			cerr << "failed to fork with error: " << strerror(errno) << endl;
 			return ERROR_WITH_FORK;
 		} else if(cjpeg==0){
-			fd = open(outfilename.c_str(),O_RDWR|O_CREAT,mode);
-			if(fd<0){
-				cerr << "could not create the output file: " << outfilename << " with error: " << strerror(errno) << endl;
-				return ERROR_WITH_FORK;
-			}
-			dup2(fd,1);
 			if(execlp("cjpeg","cjpeg","-sample","1x1","-verbose","-outfile",outfilename.c_str(),next_file->d_name)<0){
 				cerr << "cjpeg failed with error: " << strerror(errno) << endl;
 				return ERROR_WITH_CJPEG;
@@ -369,7 +362,6 @@ int main(int argc, char **argv) {
 			if(!(fstat(fd,&zstat)<0)){
 				final_input_size += zstat.st_size;
 			}
-			close(fd);
 			remove(next_file->d_name);
 		}
     }
