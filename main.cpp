@@ -343,7 +343,7 @@ int main(int argc, char **argv) {
 			cerr << "failed to fork with error: " << strerror(errno) << endl;
 			return ERROR_WITH_FORK;
 		} else if(cjpeg==0){
-			int fd = open(outfilename.c_str(),O_RDWR|O_CREAT,mode);
+			fd = open(outfilename.c_str(),O_RDWR|O_CREAT,mode);
 			if(fd<0){
 				cerr << "could not create the output file: " << outfilename << " with error: " << strerror(errno) << endl;
 				return ERROR_WITH_FORK;
