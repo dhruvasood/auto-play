@@ -212,7 +212,6 @@ int main(int argc, char **argv) {
 		return ERROR_WITH_OUTPUT_DIR;
 	}
 	
-	uint32_t total_input_size = 0, final_input_size = 0;
 	while (next_file = readdir(dir)){
 		const char* tmp;
 		if(!(tmp = strstr(next_file->d_name,".bmp")))
@@ -228,16 +227,15 @@ int main(int argc, char **argv) {
 			cerr << "fstat of bmp file: " << outfilename << " failed with error: " << strerror(errno) << endl;
 			return ERROR_WITH_INPUT;
 		}
-		total_input_size += gStat.st_size;
-        ImageFile jf;
+        	ImageFile jf;
 		jf.m_number = atoi(outfilename.c_str()+strlen("file"));
 		jf.m_filename = outfilename;
 		jf.m_filesize = gStat.st_size;
 		images.insert(jf);
 		close(zfd);
-    }
+    	}
     	
-    closedir(dir);
+    	closedir(dir);
 	
 	uint32_t w,h;
 	stringstream ss;
@@ -304,7 +302,7 @@ int main(int argc, char **argv) {
 		remove(iter->m_filename.c_str());
 	}
     	
-    /*save the last image*/
+    	/*save the last image*/
 	uint8_t* image = new uint8_t[WIDTH*HEIGHT*3];
 	const int BLOCKS_PER_STRIDE = WIDTH/8;
 	for(int a=0;a<blocks.size();a++){
@@ -358,14 +356,9 @@ int main(int argc, char **argv) {
 				cerr << "cjpeg failed with error: " << status << endl;
 				return ERROR_WITH_CJPEG;
 			}
-			struct stat zstat;
-			if(!(fstat(fd,&zstat)<0)){
-				final_input_size += zstat.st_size;
-			}
 			remove(next_file->d_name);
 		}
-    }
-    
-    closedir(dir);
+    	}
+    	closedir(dir);
 	return SUCCESS;
 }
